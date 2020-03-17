@@ -6,7 +6,7 @@ script:
   - bundle exec rspec
 
 before_install:
-  - mysql -e 'CREATE DATABASE favorite_products_test;'
+  - mysql -e "CREATE DATABASE ${DATABASE_NAME}_test;"
 
 services:
   - mysql
