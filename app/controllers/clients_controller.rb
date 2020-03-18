@@ -2,6 +2,7 @@
 
 class ClientsController < ApplicationController
   before_action :set_client, only: %i[show update destroy]
+  skip_before_action :authenticate_request, only: %i[create]
 
   def index
     @clients = Client.all
