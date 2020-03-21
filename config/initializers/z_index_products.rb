@@ -1,26 +1,28 @@
 # frozen_string_literal: true
 
-# clear DB
-REDIS.flushdb
+if ENV['RAILS_ENV'] != 'test'
+  # clear DB
+  REDIS.flushdb
 
-def next_page(page_number)
-  url_base = "http://challenge-api.luizalabs.com/api/product/?page=#{page_number}"
+  def next_page(page_number)
+    url_base = "http://challenge-api.luizalabs.com/api/product/?page=#{page_number}"
 
-  HTTParty.get(url_base)
-end
+    HTTParty.get(url_base)
+  end
 
-def store_keys(products)
-  products.each { |product| REDIS.set(product['id'], '') }
-end
+  def store_keys(products)
+    products.each { |product| REDIS.set(product['id'], '') }
+  end
 
-page_number = 0
+  page_number = 0
 
-loop do
-  page_number += 1
+  loop do
+    page_number += 1
 
-  res = next_page(page_number)
+    res = next_page(page_number)
 
-  break if res.message != 'OK'
+    break if res.message != 'OK'
 
-  store_keys res['products']
+    store_keys res['products']
+  end
 end
