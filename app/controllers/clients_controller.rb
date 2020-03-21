@@ -37,6 +37,10 @@ class ClientsController < ApplicationController
   end
 
   def add_product
+    product_id = product_params[:id]
+
+    render json: @client.errors, status: :unprocessable_entity and return if !REDIS.exists(product_id)
+
     @client.products = (@client.products || {}).merge!(Hash[product_params[:id], product_params])
 
     save_client
